@@ -1,5 +1,5 @@
 import { Component } from "react";
-
+import Skeleton from "react-loading-skeleton";
 import { Card, Alert, Spinner } from "react-bootstrap";
 
 // ORDER OF CALLING
@@ -61,18 +61,26 @@ class MovieDetails extends Component {
       <>
         <h2>{this.props.movieTitle}</h2>
 
-        {this.state.movieDetailsObject ? (
-          <Card>
+        <Card>
+          {/* the question mark (?) is the optional chaining operator, 
+            it basically does the same as doing {this.state.movieDetailsObject && this.state.movieDetailsObject.Poster && ...} */}
+
+          {/* this conditionally renders either the Card.Img or a skeleton */}
+          {this.state.movieDetailsObject?.Poster ? (
             <Card.Img variant="top" src={this.state.movieDetailsObject.Poster} />
-            <Card.Body className="text-dark p-4">
-              <Card.Title>{this.state.movieDetailsObject.Title}</Card.Title>
-              <Card.Text>{this.state.movieDetailsObject.Year}</Card.Text>
-            </Card.Body>
-          </Card>
-        ) : (
-          //   <Alert variant={"info"}>Loading the movie...</Alert>
-          <Spinner animation="grow" variant="info" />
-        )}
+          ) : (
+            <span style={{ lineHeight: 0 }}>
+              <Skeleton height={800} />
+            </span>
+          )}
+          <Card.Body className="text-dark p-4">
+            <Card.Title>
+              {/* rendering title OR a skeleton */}
+              {this.state.movieDetailsObject?.Title || <Skeleton height={40} className="mb-3" />}
+            </Card.Title>
+            <Card.Text>{this.state.movieDetailsObject?.Year || <Skeleton count={5} />}</Card.Text>
+          </Card.Body>
+        </Card>
       </>
     );
   }
